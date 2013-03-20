@@ -1,0 +1,17 @@
+.cache
+.classpath
+.project
+.settings
+logs
+project/project
+project/target
+project/boot
+target
+.target
+tmp
+bin
+.history
+.idea
+.idea_modules
+.DS_Store
+mail-import/src/test/resources/2012.txt.emf
