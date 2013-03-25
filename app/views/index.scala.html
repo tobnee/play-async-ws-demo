@@ -1,7 +1,12 @@
-@(message: String)
+@(cities: Seq[(String,String)])
 <html>
 <body>
-    <h1>@message</h1>
+  <h1>Groupon Cities</h1>
+  <ul>
+  @cities.map { case (city,link) =>
+    <li><a href="@routes.Deals.topDeals(link)">@city</a></li>
+  }
+  </ul>
 </body>
 </html>
 

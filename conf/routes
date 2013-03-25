@@ -3,15 +3,11 @@
 # ~~~~
 
 # Home page
-GET     /                           controllers.Application.index
+GET     /                           controllers.Deals.dealCityOverview()
 
-GET     /deal/:id                   controllers.Deals.deal(id: Int)
+GET     /deal/overview/:city        controllers.Deals.topDeals(city)
 
-GET     /topdeal/:id                controllers.Deals.topdeal(id: Int)
-
-GET     /deal/overview/:city        controllers.Deals.dealOverview(city)
-
-GET     /deal/overview/:city/tsv    controllers.Deals.dealOverviewTsv(city)
+GET     /deal/overview/:city/tsv    controllers.Deals.topDealsTsv(city)
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.at(path="/public", file)
