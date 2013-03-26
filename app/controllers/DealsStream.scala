@@ -9,6 +9,7 @@ import concurrent.{ExecutionContext, Await, Future}
 import ExecutionContext.Implicits.global
 import play.api.libs.json.{JsValue, Json}
 import Json._
+import play.api.cache.Cache
 
 object DealsStream extends Controller {
   val asJson: Enumeratee[(String, String), JsValue] = Enumeratee.map[(String, String)] {
@@ -38,7 +39,7 @@ object DealsStream extends Controller {
   }
 
   def dealEvents(city: String): Enumerator[(String, String)] = {
-    val deals = Groupon.dealLinksForCity(city).map(_.toStream.map(Groupon.dealData))
+    val deals = Groupon.dealLinksForCity(city).map(_.toStream.map(cachedDealData))
     val d = Await.result(deals.fallbackTo(Future(Stream())), Timeout(5000).duration).toIterator
     Enumerator.generateM {
       if (d.hasNext) {
@@ -50,4 +51,16 @@ object DealsStream extends Controller {
       else Future(None)
     }
   }
+
+  def cachedDealData(link:String) = {
+    import play.api.Play.current
+    val res = Cache.getAs[Option[(String,String)]](link)
+    if(!res.isDefined) {
+      println(s"load $link from cache")
+      val f = Groupon.dealData(link)
+      f.onSuccess{ case e => Cache.set(link,e,10000)}
+      f
+    } else Future(res.get)
+  }
+
 }
