@@ -18,7 +18,7 @@ object DealsStream extends Controller {
 
   def dealFeed(city: String) = Action {
     val asJson: Enumeratee[(String, String), JsValue] = Enumeratee.map[(String, String)] {
-      case (desc,percent) => toJson(Map("desc" -> toJson(desc), "percent" -> toJson(percent)))
+      case (desc, percent) => toJson(Map("desc" -> toJson(desc), "percent" -> toJson(percent)))
     }
     Ok.feed(dealEvents(city) through asJson.compose(EventSource())).as("text/event-stream")
   }
@@ -27,7 +27,11 @@ object DealsStream extends Controller {
     val deals = Groupon.dealLinksForCity(city).map(_.map(Groupon.dealData))
     val d = Await.result(deals.fallbackTo(Future(Nil)), Timeout(1000).duration).toIterator
     Enumerator.generateM[(String, String)] {
-      if (d.hasNext) d.next().map(_.orElse(Some("", "")))
+      println("push event")
+      if (d.hasNext) {
+        val f = d.next().map(_.orElse(Some("", "")))
+        f.flatMap(content => play.api.libs.concurrent.Promise.timeout(content, 500))
+      }
       else Future(None)
     }
   }
