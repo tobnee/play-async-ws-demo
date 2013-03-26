@@ -12,11 +12,11 @@ object GrouponParser {
 
   def extractCityLinks(content: String) = {
     val parser = htmlParser(content)
-    for {
+    (for {
       span <- parser \\ "span"
       cssClass <- span \ "@class" if cssClass.text == "citiesSelectItem"
       onClick <- span \ "@onclick"
-    } yield (span.text, extractCityUrl(onClick.text).getOrElse("none"))
+    } yield (span.text, extractCityUrl(onClick.text).getOrElse("none"))).toSet
   }
 
   def extractCityUrl(content: String) =
