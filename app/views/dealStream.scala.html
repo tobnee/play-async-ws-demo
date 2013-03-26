@@ -1,0 +1,33 @@
+@(city: String)
+<!DOCTYPE html>
+<meta charset="utf-8">
+<html>
+<head>
+    <meta charset="utf-8">
+    <link href="@routes.Assets.at("stylesheets/chart.css")" rel="stylesheet"></link>
+    <script src="@routes.Assets.at("javascripts/jquery-1.9.1.min.js")"></script>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="@routes.Assets.at("javascripts/topDealBarChart.js")"></script>
+    <title></title>
+</head>
+<body>
+
+    <script type="text/javascript" charset="utf-8">
+
+            var feed;
+
+            var open = function() {
+             if(feed) {
+              feed.close()
+              }
+              feed = new EventSource('@routes.Deals.dealFeed(city)')
+              feed.onmessage = function(e) {
+               var data = e.data
+                console.log(data)
+              }
+            }
+
+            open();
+    </script>
+</body>
+</html>

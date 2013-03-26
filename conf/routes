@@ -7,6 +7,10 @@ GET     /                           controllers.Deals.dealCityOverview()
 
 GET     /deal/overview/:city        controllers.Deals.topDeals(city)
 
+GET     /deal/feed/:city            controllers.Deals.dealFeed(city)
+
+GET     /deal/status/:city          controllers.Deals.dealFeedView(city)
+
 GET     /deal/overview/:city/tsv    controllers.Deals.topDealsTsv(city)
 
 # Map static resources from the /public folder to the /assets URL path
