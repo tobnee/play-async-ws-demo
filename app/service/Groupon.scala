@@ -18,7 +18,7 @@ object Groupon {
   }
 
   def getBody(path: String) = {
-    WS.url(util.gpnLink(path)).get().map(_.body.toString)
+    WS.url(gpnLink(path)).get().map(_.body.toString)
   }
 
    def dealOverviewData(city: String) = {
@@ -28,4 +28,6 @@ object Groupon {
         Future.sequence(listOfDealFutures)
     }
   }
+
+ def gpnLink(path : String) = "http://www.groupon.de" + path
 }
