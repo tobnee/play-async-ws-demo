@@ -1,4 +1,4 @@
-@(city: String)
+@()
 <!DOCTYPE html>
 <meta charset="utf-8">
 <html>
@@ -15,14 +15,14 @@
              if(feed) {
               feed.close()
               }
-              feed = new EventSource('@routes.DealsStream.dealFeed(city)')
+              feed = new EventSource('@routes.DealsStream.dealFeed()')
               feed.onmessage = function(e) {
                 var data = JSON.parse(e.data)
                 console.log(data)
                 if(data.percent !== "") {
                  var percentStr = parseFloat('0'+data.percent)*100
                  var percent = percentStr.toFixed(0)
-                 $('dl').append('<dt>'+percent+'%</dt><dd>'+data.desc+'</dd>')
+                 $('dl').prepend('<dt>'+percent+'%</dt><dd>'+data.desc+'</dd>')
                 }
               }
             }
