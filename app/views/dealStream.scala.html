@@ -20,7 +20,7 @@
              if(feed) {
               feed.close()
               }
-              feed = new EventSource('@routes.Deals.dealFeed(city)')
+              feed = new EventSource('@routes.DealsStream.dealFeed(city)')
               feed.onmessage = function(e) {
                var data = e.data
                 console.log(data)
