@@ -5,7 +5,6 @@ import concurrent.ExecutionContext
 import ExecutionContext.Implicits.global
 import service.Groupon
 
-
 object Deals extends Controller {
 
   def dealCityOverview() = Action {

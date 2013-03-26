@@ -7,9 +7,9 @@ GET     /                           controllers.Deals.dealCityOverview()
 
 GET     /deal/overview/:city        controllers.Deals.topDeals(city)
 
-GET     /deal/feed/:city            controllers.DealsStream.dealFeed(city)
+GET     /deal/feed/:city            controllers.DealsStream.dealFeedView(city)
 
-GET     /deal/status/:city          controllers.DealsStream.dealFeedView(city)
+GET     /deal/feed/:city/sse        controllers.DealsStream.dealFeed(city)
 
 GET     /deal/overview/:city/tsv    controllers.Deals.topDealsTsv(city)
 

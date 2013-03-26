@@ -7,6 +7,8 @@ import service.Groupon
 import akka.util.Timeout
 import concurrent.{ExecutionContext, Await, Future}
 import ExecutionContext.Implicits.global
+import play.api.libs.json.{JsValue, Json}
+import Json._
 
 object DealsStream extends Controller {
 
@@ -15,10 +17,10 @@ object DealsStream extends Controller {
   }
 
   def dealFeed(city: String) = Action {
-    val in: Enumeratee[(String, String), String] = Enumeratee.map[(String, String)] {
-      case e => e.toString()
+    val asJson: Enumeratee[(String, String), JsValue] = Enumeratee.map[(String, String)] {
+      case (desc,percent) => toJson(Map("desc" -> toJson(desc), "percent" -> toJson(percent)))
     }
-    Ok.feed(dealEvents(city) &> in ><> EventSource()).as("text/event-stream")
+    Ok.feed(dealEvents(city) through asJson.compose(EventSource())).as("text/event-stream")
   }
 
   def dealEvents(city: String): Enumerator[(String, String)] = {

@@ -4,26 +4,26 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <link href="@routes.Assets.at("stylesheets/chart.css")" rel="stylesheet"></link>
     <script src="@routes.Assets.at("javascripts/jquery-1.9.1.min.js")"></script>
-    <script src="http://d3js.org/d3.v3.min.js"></script>
-    <script src="@routes.Assets.at("javascripts/topDealBarChart.js")"></script>
     <title></title>
 </head>
 <body>
-
+<dl></dl>
     <script type="text/javascript" charset="utf-8">
-
             var feed;
-
             var open = function() {
              if(feed) {
               feed.close()
               }
               feed = new EventSource('@routes.DealsStream.dealFeed(city)')
               feed.onmessage = function(e) {
-               var data = e.data
+                var data = JSON.parse(e.data)
                 console.log(data)
+                if(data.percent !== "") {
+                 var percentStr = parseFloat('0'+data.percent)*100
+                 var percent = percentStr.toFixed(0)
+                 $('dl').append('<dt>'+percent+'%</dt><dd>'+data.desc+'</dd>')
+                }
               }
             }
 
