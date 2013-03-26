@@ -26,10 +26,11 @@ object DealsStream extends Controller {
   def dealEvents(city: String): Enumerator[(String, String)] = {
     val deals = Groupon.dealLinksForCity(city).map(_.map(Groupon.dealData))
     val d = Await.result(deals.fallbackTo(Future(Nil)), Timeout(1000).duration).toIterator
-    Enumerator.generateM[(String, String)] {
-      println("push event")
+    Enumerator.generateM {
       if (d.hasNext) {
+        // build empty event if no desc is given
         val f = d.next().map(_.orElse(Some("", "")))
+        // time messages to be delivered with a maximum rate
         f.flatMap(content => play.api.libs.concurrent.Promise.timeout(content, 500))
       }
       else Future(None)
