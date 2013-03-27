@@ -1,7 +1,6 @@
 package util
 
 import java.io.StringReader
-import org.joda.time.DateTime
 
 object GrouponParser {
   val cityPattern = """/deals/([a-zA-Z-]+)""".r
@@ -28,8 +27,6 @@ object GrouponParser {
 
   // <meta name="description" content="Mongolisches All-you-can-eat-Buffet mit ..."/>
   def extractDealData(content: String) = {
-    println("startparse", DateTime.now().getMillisOfDay)
-    val start = System.currentTimeMillis()
     val parser = htmlParser(content)
 
     // get desc
@@ -55,8 +52,6 @@ object GrouponParser {
           .map(_.reverse.drop(1).reverse)
           .map("." + _ + (math.random * 100).toInt.toString)
     }
-
-    println("time for parsing: ", System.currentTimeMillis() - start)
 
     percent.map(percent => (desc, percent))
   }

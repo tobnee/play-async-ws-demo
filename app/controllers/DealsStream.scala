@@ -10,6 +10,7 @@ import ExecutionContext.Implicits.global
 import play.api.libs.json.Json
 import Json._
 import play.api.cache.Cache
+import play.api.Logger
 
 object DealsStream extends Controller {
 
@@ -41,12 +42,16 @@ object DealsStream extends Controller {
     val d = Await.result(deals.fallbackTo(Future(Stream())), Timeout(5000).duration).toIterator
     Enumerator.generateM {
       if (d.hasNext) {
+        Logger.debug(s"push event for $city")
         // build empty event if no desc is given
         val f = d.next().map(_.orElse(Some("", "")))
         // time messages to be delivered with a maximum rate
         f.flatMap(content => play.api.libs.concurrent.Promise.timeout(content, (20000*math.random).toLong))
       }
-      else Future(None)
+      else {
+        Logger.debug(s"end stream for $city")
+        Future(None)
+      }
     }
   }
 
@@ -58,7 +63,7 @@ object DealsStream extends Controller {
       f.onSuccess{ case e => Cache.set(link,e,10000)}
       f
     } else {
-      println(s"load $link from cache")
+      Logger.debug(s"load $link from cache")
       Future(res.get)
     }
   }

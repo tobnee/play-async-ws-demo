@@ -3,6 +3,7 @@ package service
 import play.api.libs.ws.WS
 import concurrent.{ExecutionContext, Future}
 import ExecutionContext.Implicits.global
+import play.api.Logger
 
 object Groupon {
   def supportedCities() = {
@@ -18,6 +19,7 @@ object Groupon {
   }
 
   def getBody(path: String) = {
+    Logger.debug(s"GET $path")
     WS.url(gpnLink(path)).get().map(_.body.toString)
   }
 
