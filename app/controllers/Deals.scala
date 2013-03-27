@@ -4,6 +4,7 @@ import play.api.mvc._
 import concurrent.ExecutionContext
 import ExecutionContext.Implicits.global
 import service.Groupon
+import util._
 
 object Deals extends Controller {
 
@@ -28,7 +29,7 @@ object Deals extends Controller {
     }
   }
 
-  def asTsv(list: Traversable[(String,String)]) = {
+  def asTsv(list: Traversable[DescPercent]) = {
     val header = "desc\tdiscount\tlongdesc\n"
     list.map{ case (desc,percent) => desc.take(7) + "\t" + percent + "\t" + desc}
       .mkString(header, "\n", "")
